@@ -78,7 +78,9 @@ h1, h2, h3 {
 }
 
 /* ============ TEXTO ============ */
-p, label {
+p, span, li, input, label {
+    font-family: 'Sarpanch', sans-serif;
+
     color: #c7f2ff !important;
 }
 
@@ -219,8 +221,7 @@ with tab2:
     st.header("Resultados Estadísticos")
  
     if "datos" in st.session_state:
-     #contenido {
-    font-family: 'Sarpanch', sans-serif;
+     
         data = st.session_state["datos"]
  
         media = np.mean(data)
