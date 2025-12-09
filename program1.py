@@ -2,56 +2,6 @@ import streamlit as st
 import numpy as np
  
 st.title("Calculadora Estadística con Pestañas")
-# Estilos personalizados
-st.markdown("""
-<style>
-
-/* ===== FUENTE GLOBAL ===== */
-html, body, [class*="css"]  {
-    font-family: 'Poppins', sans-serif;
-    font-size: 16px;
-}
-
-/* ===== COLOR DEL TITULO ===== */
-h1, h2, h3 {
-    color: #4a90e2;
-}
-
-/* ===== COLOR DE FONDO ===== */
-.main {
-    background-color: #f5f7fa;
-}
-
-/* ===== CAJAS DE TEXTO ===== */
-textarea {
-    background-color: #ffffff !important;
-    color: #333333 !important;
-    border-radius: 10px !important;
-}
-
-/* ===== BOTONES ===== */
-.stButton>button {
-    background-color: #4a90e2;
-    color: white;
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-weight: bold;
-    border: none;
-}
-
-.stButton>button:hover {
-    background-color: #357ABD;
-}
-
-/* ===== PESTAÑAS ===== */
-.stTabs [data-baseweb="tab"] {
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.stTabs [data-baseweb="tab"]:hover {
-    color: #4a90e2;
-}
 
  
 # Creamos las pestañas
