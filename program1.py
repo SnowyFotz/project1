@@ -57,7 +57,22 @@ textarea {
 </style>
 """, unsafe_allow_html=True)
 
- 
+/* TITULOS */
+h1, h2, h3 {
+    color: #4a90e2; /* azul suave */
+}
+
+/* FONDO */
+.main {
+    background-color: #f5f7fa;
+}
+
+/* BOTONES */
+.stButton>button {
+    background-color: #4a90e2;
+}
+
+
 # Creamos las pestañas
 tab1, tab2, tab3 = st.tabs(["Calculadora", "Estadísticos", "Acerca de"])
  
