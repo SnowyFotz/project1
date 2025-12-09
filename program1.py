@@ -8,7 +8,8 @@ st.title("Calculadora Estadística con Pestañas")
 # Hologramas, vidrio, burbujas, HUD y animaciones
 # =============================
 st.markdown("""
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+
 
 <style>
 
@@ -60,6 +61,7 @@ html, body, [class*="css"] {
 
 /* ============ TITULOS HOLOGRÁFICOS ============ */
 h1, h2, h3 {
+    font-family: 'Audiowide', sans-serif !important;
     color: #66eaff;
     font-weight: 600;
     text-shadow:
