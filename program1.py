@@ -3,45 +3,6 @@ import numpy as np
  
 st.title("Calculadora Estadística con Pestañas")
 
-# =============================
-# 💠 TEMA FUTURISTA ESTILO 2000 💠
-# =============================
-st.markdown("""
-<!-- Fuente futurista geométrica -->
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;600&display=swap" rel="stylesheet">
-
-<style>
-
-/* ======= FUENTE GLOBAL ======= */
-html, body, [class*="css"] {
-    font-family: 'Orbitron', sans-serif;
-    color: #e6f7ff;
-    letter-spacing: 0.5px;
-}
-
-/* ======= FONDO GENERAL ======= */
-.main {
-    background: radial-gradient(circle at 20% 20%, #0a1a24, #000000 80%);
-    background-attachment: fixed;
-}
-
-/* ======= TITULOS ======= */
-h1, h2, h3 {
-    color: #4dcfff;
-    font-weight: 600;
-    text-shadow: 0 0 8px rgba(77, 207, 255, 0.7);
-}
-
-/* ======= TEXTOS ======= */
-p, label {
-    color: #cfeaff !important;
-}
-
-/* ======= ÁREA DE TEXTO ======= */
-textarea {
-    background-color: #07131a !important;
-    b
-
 
 
 # Creamos las pestañas
