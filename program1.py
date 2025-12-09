@@ -16,7 +16,7 @@ st.markdown("""
 html, body, [class*="css"]  {
     font-family: 'Quicksand', sans-serif;
     font-size: 17px;
-    color: #555;
+    color: #ffffff;
 }
 
 /* ======= FONDO GENERAL ======= */
