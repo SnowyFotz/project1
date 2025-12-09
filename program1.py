@@ -4,119 +4,175 @@ import numpy as np
 st.title("Calculadora Estadística con Pestañas")
 
 # =============================
-# 💠 TEMA FUTURISTA ESTILO 2000 💠
+# 💠 ULTRA TEMA FUTURISTA 2000 💠
+# Hologramas, vidrio, burbujas, HUD y animaciones
 # =============================
 st.markdown("""
-<!-- Fuente futurista geométrica -->
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
 
-/* ======= FUENTE GLOBAL ======= */
+/* ============ FUENTE GLOBAL ============ */
 html, body, [class*="css"] {
     font-family: 'Orbitron', sans-serif;
-    color: #e6f7ff;
-    letter-spacing: 0.5px;
+    color: #dff6ff;
+    letter-spacing: 0.6px;
 }
 
-/* ======= FONDO GENERAL ======= */
+/* ============ FONDO ANIMADO FUTURISTA (Vidrio + burbujas Frutiger Aero 2000) ============ */
 .main {
-    background: radial-gradient(circle at 20% 20%, #0a1a24, #000000 80%);
-    background-attachment: fixed;
+    background: linear-gradient(135deg, rgba(0,40,60,0.9), rgba(0,0,20,0.95)),
+                url('https://i.imgur.com/rK8eX9Y.png'); /* textura burbujas vidrio */
+    background-size: cover;
+    animation: bgPulse 12s ease-in-out infinite;
 }
 
-/* ======= TITULOS ======= */
+@keyframes bgPulse {
+    0% { filter: brightness(0.90); }
+    50% { filter: brightness(1.06); }
+    100% { filter: brightness(0.90); }
+}
+
+/* ============ EFECTO SCANNER HUD ========= */
+.main:before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(20,255,255,0.12) 0px,
+        rgba(20,255,255,0.12) 2px,
+        transparent 2px,
+        transparent 4px
+    );
+    mix-blend-mode: screen;
+    animation: hudScan 6s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes hudScan {
+    0% { transform: translateY(-10%); }
+    100% { transform: translateY(110%); }
+}
+
+/* ============ TITULOS HOLOGRÁFICOS ============ */
 h1, h2, h3 {
-    color: #4dcfff;
+    color: #66eaff;
     font-weight: 600;
-    text-shadow: 0 0 8px rgba(77, 207, 255, 0.7);
+    text-shadow:
+        0 0 10px rgba(102,234,255,0.9),
+        0 0 20px rgba(102,234,255,0.5);
+    animation: holoGlow 3s ease-in-out infinite alternate;
 }
 
-/* ======= TEXTOS ======= */
+@keyframes holoGlow {
+    0% { text-shadow: 0 0 6px #00d9ff; }
+    100% { text-shadow: 0 0 20px #66eaff; }
+}
+
+/* ============ TEXTO ============ */
 p, label {
-    color: #cfeaff !important;
+    color: #c7f2ff !important;
 }
 
-/* ======= ÁREA DE TEXTO ======= */
+/* ============ TEXTAREA - VIDRIO HOLOGRÁFICO ============ */
 textarea {
-    background-color: #07131a !important;
-    border: 2px solid #144e66 !important;
-    color: #aee6ff !important;
-    border-radius: 8px !important;
+    background: rgba(0,50,70,0.35) !important;
+    backdrop-filter: blur(8px) saturate(1.5);
+    border: 2px solid rgba(0,200,255,0.5) !important;
+    border-radius: 12px !important;
     padding: 12px !important;
-    box-shadow: 0 0 6px rgba(0, 204, 255, 0.25);
+    color: #d6f9ff !important;
+    box-shadow: 0 0 12px rgba(0,200,255,0.5);
 }
 
-/* ======= BOTONES ======= */
+/* ============ BOTONES HOLOGRÁFICOS ============ */
 .stButton>button {
-    background: linear-gradient(90deg, #0da2c8, #14c7ff);
-    color: #001821;
-    border-radius: 6px;
+    background: rgba(0,180,255,0.25);
+    border: 2px solid rgba(0,230,255,0.8);
+    border-radius: 10px;
+    padding: 14px 28px;
+    color: #dffaff;
     font-weight: bold;
-    border: none;
-    padding: 12px 24px;
-    text-shadow: 0 0 4px rgba(255,255,255,0.5);
-    box-shadow: 0 0 10px rgba(20, 199, 255, 0.4);
+    text-shadow: 0 0 6px rgba(255,255,255,0.5);
+    box-shadow:
+        0 0 10px rgba(0,220,255,0.45),
+        inset 0 0 12px rgba(0,220,255,0.35);
+    backdrop-filter: blur(6px);
+    transition: 0.25s ease;
 }
 
 .stButton>button:hover {
-    background: linear-gradient(90deg, #14c7ff, #0da2c8);
-    transform: scale(1.03);
-    box-shadow: 0 0 14px rgba(20, 199, 255, 0.7);
+    background: rgba(0,220,255,0.45);
+    border-color: #66f3ff;
+    transform: scale(1.05);
+    box-shadow:
+        0 0 20px rgba(0,240,255,0.8),
+        inset 0 0 25px rgba(255,255,255,0.5);
 }
 
-/* ======= PESTAÑAS ======= */
+/* ============ PESTAÑAS - TARJETAS DE VIDRIO ============ */
 .stTabs [data-baseweb="tab"] {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: bold;
-    color: #8bd8ff;
-    background-color: #041017;
-    border-radius: 6px 6px 0 0;
-    border: 1px solid #0f3c52;
-    margin-right: 4px;
-    padding: 8px 18px;
+    color: #9eeaff;
+    background: rgba(0,30,40,0.55);
+    backdrop-filter: blur(10px) saturate(1.4);
+    border-radius: 10px 10px 0 0;
+    border: 1px solid rgba(0,180,255,0.4);
+    margin-right: 6px;
+    padding: 10px 20px;
+    transition: 0.25s ease;
 }
 
 .stTabs [data-baseweb="tab"]:hover {
-    color: #d4f4ff;
-    background-color: #07202c;
+    color: #dffaff;
+    background: rgba(0,45,60,0.75);
+    border-color: rgba(0,230,255,0.7);
 }
 
 .stTabs [aria-selected="true"] {
-    background-color: #0a2b3d !important;
-    border-bottom: 3px solid #14c7ff !important;
+    background: rgba(0,80,110,0.75) !important;
+    border-bottom: 3px solid #5fe6ff !important;
     color: #ffffff !important;
 }
 
-/* ======= CAJAS DE RESULTADOS ======= */
+/* ============ RESULTADOS HOLOGRÁFICOS ============ */
 div[data-testid="stMetricValue"], .stAlert>div {
-    background-color: #04151f;
-    border: 1px solid #0e4a63;
-    border-radius: 8px;
-    padding: 8px 12px;
-    color: #c7f2ff !important;
-    box-shadow: 0 0 8px rgba(20,199,255,0.3);
+    background: rgba(0,35,50,0.55);
+    backdrop-filter: blur(6px);
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(0,200,255,0.4);
+    box-shadow: 0 0 10px rgba(0,220,255,0.4);
+    color: #dffaff !important;
 }
 
-/* ======= TABLAS ======= */
+/* ============ TABLAS FUTURISTAS ============ */
 table {
-    background-color: #051a24cc !important;
-    border-radius: 8px;
-    color: #e1f7ff;
+    background: rgba(0,25,35,0.6) !important;
+    color: #c7f7ff;
+    border-radius: 10px;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(0,200,255,0.4);
 }
 
-/* ======= SCROLLBAR FUTURISTA ======= */
+/* ============ SCROLLBAR NEÓN ============ */
 ::-webkit-scrollbar {
     width: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #0da2c8;
+    background: linear-gradient(#0dc6ff, #63f3ff);
     border-radius: 10px;
+    box-shadow: 0 0 6px rgba(0,200,255,0.8);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #14c7ff;
+    background: linear-gradient(#63f3ff, #a7ffff);
 }
 
 </style>
