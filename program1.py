@@ -7,51 +7,120 @@ st.title("Calculadora Estadística con Pestañas")
 st.markdown("""
 <style>
 
-/* ===== FUENTE GLOBAL ===== */
+# =============================
+# 🎀 TEMA PASTEL KAWAII STREAMLIT 🎀
+# =============================
+st.markdown("""
+<!-- Google Font kawaii -->
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+/* ======= FUENTE GLOBAL ======= */
 html, body, [class*="css"]  {
-    font-family: 'Poppins', sans-serif;
-    font-size: 16px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 17px;
+    color: #555;
 }
 
-/* ===== COLOR DEL TITULO ===== */
-h1, h2, h3 {
-    color: #4a90e2;
-}
-
-/* ===== COLOR DE FONDO ===== */
+/* ======= FONDO GENERAL ======= */
 .main {
-    background-color: #f5f7fa;
+    background: linear-gradient(135deg, #ffe8f0, #e5f6ff, #fff7d9);
+    background-size: 400% 400%;
+    animation: pastelFlow 12s ease infinite;
 }
 
-/* ===== CAJAS DE TEXTO ===== */
+@keyframes pastelFlow {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+}
+
+/* ======= TITULOS ======= */
+h1, h2, h3 {
+    color: #ff8ac7;
+    text-shadow: 0px 0px 4px rgba(255, 182, 219, 0.6);
+    font-weight: 600;
+}
+
+/* ======= TEXTOS ======= */
+p, label {
+    color: #6b6b6b !important;
+}
+
+/* ======= AREA DE TEXTO ======= */
 textarea {
-    background-color: #ffffff !important;
-    color: #333333 !important;
-    border-radius: 10px !important;
+    background-color: #ffffffcc !important;
+    border: 2px solid #ffd2e8 !important;
+    border-radius: 12px !important;
+    padding: 10px !important;
 }
 
-/* ===== BOTONES ===== */
+/* ======= BOTONES ======= */
 .stButton>button {
-    background-color: #4a90e2;
-    color: white;
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-weight: bold;
+    background: linear-gradient(90deg, #ffb3d9, #ffcce7);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 12px 22px;
+    font-size: 16px;
     border: none;
+    box-shadow: 0px 4px 8px rgba(255, 170, 200, 0.4);
+    font-weight: bold;
 }
 
 .stButton>button:hover {
-    background-color: #357ABD;
+    background: linear-gradient(90deg, #ffa3cf, #ffbde0);
+    transform: scale(1.02);
 }
 
-/* ===== PESTAÑAS ===== */
+/* ======= PESTAÑAS ======= */
 .stTabs [data-baseweb="tab"] {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: bold;
+    color: #ff8ac7;
+    background-color: #ffeaf4;
+    border-radius: 12px 12px 0 0;
+    padding: 10px 20px;
+    margin-right: 5px;
+    border: 2px solid #ffd6e9;
 }
 
 .stTabs [data-baseweb="tab"]:hover {
-    color: #4a90e2;
+    background-color: #ffd6ee;
+    color: #ff6db9;
+}
+
+.stTabs [aria-selected="true"] {
+    background-color: #ffcde6 !important;
+    border-bottom: 3px solid #ff8ac7 !important;
+}
+
+/* ======= CAJAS DE RESULTADOS ======= */
+div[data-testid="stMetricValue"], .stAlert>div {
+    background-color: #fff3fa;
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 2px solid #ffd7ef;
+}
+
+/* ======= TABLAS ======= */
+table {
+    background-color: #ffffffdd !important;
+    border-radius: 10px;
+}
+
+/* ======= SCROLLBAR KAWAII ======= */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #ffbde0;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #ff9fd1;
 }
 
 </style>
