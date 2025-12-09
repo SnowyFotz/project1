@@ -9,6 +9,8 @@ st.title("Calculadora Estadística con Pestañas")
 # =============================
 st.markdown("""
 <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sarpanch:wght@700&display=swap" rel="stylesheet">
+
 
 
 <style>
@@ -217,6 +219,8 @@ with tab2:
     st.header("Resultados Estadísticos")
  
     if "datos" in st.session_state:
+     #contenido {
+    font-family: 'Sarpanch', sans-serif;
         data = st.session_state["datos"]
  
         media = np.mean(data)
