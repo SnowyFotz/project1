@@ -28,7 +28,7 @@ st.markdown("""
         padding-bottom: 10px;
     }
 
-    /* --- BOTONES CON GLOW (La parte importante nya) --- */
+    /* --- BOTONES CON GLOW (La parte importante) --- */
     div.stButton > button {
         background-color: #000000 !important;
         color: #ffffff !important;
