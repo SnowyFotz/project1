@@ -1,12 +1,13 @@
 import streamlit as st
 import numpy as np
-import scipy.stats as stats
+from scipy import stats
 import matplotlib.pyplot as plt
 
 # Configuración de página
 st.set_page_config(page_title="Calculadora Estadística", layout="wide")
 
-# ============================
+# =============================
+# 💠 ESTILOS FUTURISTAS B&W NYA 💠
 # Inyección de CSS para el tema Dark Future
 # =============================
 st.markdown("""
@@ -27,7 +28,7 @@ st.markdown("""
         padding-bottom: 10px;
     }
 
-    /* --- BOTONES CON GLOW (La parte importante) --- */
+    /* --- BOTONES CON GLOW (La parte importante nya) --- */
     div.stButton > button {
         background-color: #000000 !important;
         color: #ffffff !important;
