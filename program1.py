@@ -1,259 +1,415 @@
 import streamlit as st
 import numpy as np
- 
-st.title("Calculadora Estadística con Pestañas")
+import scipy.stats as stats
+import matplotlib.pyplot as plt
 
-# =============================
-# 💠 ULTRA TEMA FUTURISTA 2000 💠
-# Hologramas, vidrio, burbujas, HUD y animaciones
+# Configuración de página
+st.set_page_config(page_title="Calculadora Estadística", layout="wide")
+
+# ============================
+# Inyección de CSS para el tema Dark Future
 # =============================
 st.markdown("""
-<link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Sarpanch:wght@700&display=swap" rel="stylesheet">
-
-
-
 <style>
+    /* --- FONDO GLOBAL Y FUENTE --- */
+    .stApp {
+        background-color: #000000;
+        color: #ffffff;
+        font-family: 'Courier New', Courier, monospace; /* Fuente tipo terminal */
+    }
 
-/* ============ FUENTE GLOBAL ============ */
-html, body, [class*="css"] {
-    font-family: 'Orbitron', sans-serif;
-    color: #dff6ff;
-    letter-spacing: 0.6px;
-}
+    /* --- ENCABEZADOS --- */
+    h1, h2, h3, h4, h5, h6 {
+        color: #ffffff !important;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        border-bottom: 1px solid #333;
+        padding-bottom: 10px;
+    }
 
-/* ============ FONDO ANIMADO FUTURISTA (Vidrio + burbujas Frutiger Aero 2000) ============ */
-.main {
-    background: linear-gradient(135deg, rgba(0,40,60,0.9), rgba(0,0,20,0.95)),
-                url('https://i.imgur.com/rK8eX9Y.png'); /* textura burbujas vidrio */
-    background-size: cover;
-    animation: bgPulse 12s ease-in-out infinite;
-}
+    /* --- BOTONES CON GLOW (La parte importante) --- */
+    div.stButton > button {
+        background-color: #000000 !important;
+        color: #ffffff !important;
+        border: 1px solid #ffffff !important;
+        border-radius: 0px !important; /* Bordes cuadrados futuristas */
+        padding: 0.5rem 1rem;
+        font-family: 'Courier New', monospace;
+        text-transform: uppercase;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+    }
 
-@keyframes bgPulse {
-    0% { filter: brightness(0.90); }
-    50% { filter: brightness(1.06); }
-    100% { filter: brightness(0.90); }
-}
+    /* Efecto Hover (Brillo Blanco) */
+    div.stButton > button:hover {
+        box-shadow: 0 0 15px #ffffff, 0 0 5px #ffffff inset !important;
+        text-shadow: 0 0 8px #ffffff;
+        border-color: #ffffff !important;
+        background-color: #000000 !important;
+        font-weight: bold;
+        transform: scale(1.02);
+    }
 
-/* ============ EFECTO SCANNER HUD ========= */
-.main:before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: repeating-linear-gradient(
-        0deg,
-        rgba(20,255,255,0.12) 0px,
-        rgba(20,255,255,0.12) 2px,
-        transparent 2px,
-        transparent 4px
-    );
-    mix-blend-mode: screen;
-    animation: hudScan 6s linear infinite;
-    pointer-events: none;
-}
+    /* Efecto Click */
+    div.stButton > button:active {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        box-shadow: 0 0 20px #ffffff !important;
+    }
 
-@keyframes hudScan {
-    0% { transform: translateY(-10%); }
-    100% { transform: translateY(110%); }
-}
+    /* --- INPUTS Y CAJAS DE TEXTO --- */
+    /* Hacemos que los inputs sean negros con borde gris */
+    .stTextInput input, .stTextArea textarea, .stNumberInput input, .stSelectbox div[data-baseweb="select"] div {
+        background-color: #0a0a0a !important;
+        color: #ffffff !important;
+        border: 1px solid #444 !important;
+        border-radius: 0px !important;
+    }
+    
+    /* Focus en los inputs */
+    .stTextInput input:focus, .stTextArea textarea:focus, .stNumberInput input:focus {
+        border-color: #ffffff !important;
+        box-shadow: 0 0 8px rgba(255, 255, 255, 0.3) !important;
+    }
 
-/* ============ TITULOS HOLOGRÁFICOS ============ */
-h1, h2, h3 {
-    font-family: 'Audiowide', sans-serif !important;
-    color: #66eaff;
-    font-weight: 600;
-    text-shadow:
-        0 0 10px rgba(102,234,255,0.9),
-        0 0 20px rgba(102,234,255,0.5);
-    animation: holoGlow 3s ease-in-out infinite alternate;
-}
+    /* --- PESTAÑAS (TABS) --- */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 10px;
+        background-color: #000000;
+    }
+    .stTabs [data-baseweb="tab"] {
+        height: 50px;
+        white-space: pre-wrap;
+        background-color: #000000;
+        border: 1px solid #333;
+        border-radius: 0px;
+        color: #888;
+    }
+    .stTabs [aria-selected="true"] {
+        background-color: #000000 !important;
+        color: #ffffff !important;
+        border: 1px solid #ffffff !important;
+        border-bottom: none !important;
+        box-shadow: 0 -5px 10px rgba(255,255,255,0.1);
+    }
 
-@keyframes holoGlow {
-    0% { text-shadow: 0 0 6px #00d9ff; }
-    100% { text-shadow: 0 0 20px #66eaff; }
-}
-
-/* ============ TEXTO ============ */
-p, span, li, input, label {
-    font-family: 'Sarpanch', sans-serif;
-
-    color: #c7f2ff !important;
-}
-
-/* ============ TEXTAREA - VIDRIO HOLOGRÁFICO ============ */
-textarea {
-    background: rgba(0,50,70,0.35) !important;
-    backdrop-filter: blur(8px) saturate(1.5);
-    border: 2px solid rgba(0,200,255,0.5) !important;
-    border-radius: 12px !important;
-    padding: 12px !important;
-    color: #d6f9ff !important;
-    box-shadow: 0 0 12px rgba(0,200,255,0.5);
-}
-
-/* ============ BOTONES HOLOGRÁFICOS ============ */
-.stButton>button {
-    background: rgba(0,180,255,0.25);
-    border: 2px solid rgba(0,230,255,0.8);
-    border-radius: 10px;
-    padding: 14px 28px;
-    color: #dffaff;
-    font-weight: bold;
-    text-shadow: 0 0 6px rgba(255,255,255,0.5);
-    box-shadow:
-        0 0 10px rgba(0,220,255,0.45),
-        inset 0 0 12px rgba(0,220,255,0.35);
-    backdrop-filter: blur(6px);
-    transition: 0.25s ease;
-}
-
-.stButton>button:hover {
-    background: rgba(0,220,255,0.45);
-    border-color: #66f3ff;
-    transform: scale(1.05);
-    box-shadow:
-        0 0 20px rgba(0,240,255,0.8),
-        inset 0 0 25px rgba(255,255,255,0.5);
-}
-
-/* ============ PESTAÑAS - TARJETAS DE VIDRIO ============ */
-.stTabs [data-baseweb="tab"] {
-    font-size: 15px;
-    font-weight: bold;
-    color: #9eeaff;
-    background: rgba(0,30,40,0.55);
-    backdrop-filter: blur(10px) saturate(1.4);
-    border-radius: 10px 10px 0 0;
-    border: 1px solid rgba(0,180,255,0.4);
-    margin-right: 6px;
-    padding: 10px 20px;
-    transition: 0.25s ease;
-}
-
-.stTabs [data-baseweb="tab"]:hover {
-    color: #dffaff;
-    background: rgba(0,45,60,0.75);
-    border-color: rgba(0,230,255,0.7);
-}
-
-.stTabs [aria-selected="true"] {
-    background: rgba(0,80,110,0.75) !important;
-    border-bottom: 3px solid #5fe6ff !important;
-    color: #ffffff !important;
-}
-
-/* ============ RESULTADOS HOLOGRÁFICOS ============ */
-div[data-testid="stMetricValue"], .stAlert>div {
-    background: rgba(0,35,50,0.55);
-    backdrop-filter: blur(6px);
-    padding: 10px 14px;
-    border-radius: 12px;
-    border: 1px solid rgba(0,200,255,0.4);
-    box-shadow: 0 0 10px rgba(0,220,255,0.4);
-    color: #dffaff !important;
-}
-
-/* ============ TABLAS FUTURISTAS ============ */
-table {
-    background: rgba(0,25,35,0.6) !important;
-    color: #c7f7ff;
-    border-radius: 10px;
-    backdrop-filter: blur(4px);
-    border: 1px solid rgba(0,200,255,0.4);
-}
-
-/* ============ SCROLLBAR NEÓN ============ */
-::-webkit-scrollbar {
-    width: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-    background: linear-gradient(#0dc6ff, #63f3ff);
-    border-radius: 10px;
-    box-shadow: 0 0 6px rgba(0,200,255,0.8);
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(#63f3ff, #a7ffff);
-}
+    /* --- MENSAJES DE ALERTA (Success, Info, Error) --- */
+    /* Ajustamos los colores para que no sean tan brillantes, más estilo "consola" */
+    .stAlert {
+        background-color: #111 !important;
+        color: #fff !important;
+        border: 1px solid #fff !important;
+    }
 
 </style>
 """, unsafe_allow_html=True)
 
+st.title("Calculadora Estadística // SYSTEM_READY")
 
-# Creamos las pestañas
-tab1, tab2, tab3 = st.tabs(["Calculadora", "Estadísticos", "Acerca de"])
- 
-# --------------------
-# PESTAÑA 1: CALCULADORA
-# --------------------
+# =============================
+# MENÚ CON PESTAÑAS (Funcionalidad Original)
+# =============================
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+    "Tendencia Central",
+    "IC Media Pob.",
+    "IC Proporción",
+    "Dos Poblaciones",
+    "Cálculo Z / T",
+    "Tamaño Muestra"
+])
+
+# Script de scroll original (se mantiene igual para funcionalidad)
+st.markdown("""
+<script>
+(function(){
+  function scrollActiveTabIntoView(){
+    try{
+      const active = document.querySelector('.stTabs [aria-selected="true"]');
+      if(active && active.scrollIntoView){
+        active.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+      }
+    }catch(e){console.error('scrollActiveTabIntoView error',e)}
+  }
+  setTimeout(scrollActiveTabIntoView, 50);
+  document.addEventListener('click', function(e){
+    const t = e.target.closest('[data-baseweb="tab"]');
+    if(t) setTimeout(scrollActiveTabIntoView, 50);
+  }, true);
+  function observeTabs(){
+    const tabsContainer = document.querySelector('.stTabs');
+    if(!tabsContainer) return;
+    const mo = new MutationObserver(function(){
+      scrollActiveTabIntoView();
+    });
+    mo.observe(tabsContainer, {childList:true, subtree:true, attributes:true});
+  }
+  const app = document.querySelector('[data-testid="stApp"]');
+  if(app){
+    const mo2 = new MutationObserver(function(){
+      observeTabs(); scrollActiveTabIntoView();
+    });
+    mo2.observe(app, {childList:true, subtree:true});
+  }
+  observeTabs();
+})();
+</script>
+""", unsafe_allow_html=True)
+
+# =============================
+# PESTAÑA 1
+# =============================
 with tab1:
-    st.header("Calculadora de Datos")
- 
-    st.write("Ingresa una lista de números separados por comas. Ejemplo:")
-    st.code("10, 20, 15, 30, 25")
- 
-    data_input = st.text_area("Datos:")
- 
-    if st.button("Cargar datos"):
+    st.header(">> Medidas de Tendencia Central")
+
+    datos = st.text_area(
+        "INPUT DE DATOS (Separados por comas)",
+        placeholder="Ej: 10, 12, 15, 18, 20"
+    )
+
+    if st.button("EJECUTAR CÁLCULO [TC]"):
+        if datos:
+            try:
+                lista = [float(x) for x in datos.split(",")]
+                media = np.mean(lista)
+                mediana = np.median(lista)
+                moda = max(set(lista), key=lista.count)
+
+                c1, c2, c3 = st.columns(3)
+                c1.metric("Media", f"{media:.4f}")
+                c2.metric("Mediana", f"{mediana:.4f}")
+                c3.metric("Moda", f"{moda:.4f}")
+            except:
+                st.error("Error de sintaxis en los datos.")
+        else:
+            st.warning("Ingrese datos para procesar.")
+
+    st.markdown("---")
+    st.subheader(">> Error Estándar")
+
+    c_desv, c_n = st.columns(2)
+    desviacion_tc = c_desv.number_input("Desv. Estándar (s)", min_value=0.0, key="tc_desviacion")
+    n_tc = c_n.number_input("Muestra (n)", min_value=1, key="tc_n")
+
+    if st.button("CALCULAR ERROR [SE]"):
+        error_estandar = desviacion_tc / np.sqrt(n_tc)
+        st.success(f"Error estándar = {error_estandar:.4f}")
+
+    st.markdown("---")
+    st.subheader(">> Teorema del Límite Central (TLC)")
+
+    if datos:
         try:
-            # Convertir texto a lista numérica
-            data = [float(x.strip()) for x in data_input.split(",")]
- 
-            st.success("Datos cargados correctamente.")
-            st.write("Tamaño de la muestra:", len(data))
-            st.write("Primeros valores:", data[:5])
- 
-            # Guardamos los datos para usarlos en otras pestañas
-            st.session_state["datos"] = data
- 
-        except:
-            st.error("Error: revisa que los datos estén escritos correctamente.")
- 
-# --------------------
-# PESTAÑA 2: ESTADÍSTICOS
-# --------------------
+            datos_tlc = [float(x) for x in datos.split(",")]
+            if len(datos_tlc) >= 2:
+                col_tlc1, col_tlc2 = st.columns(2)
+                n_muestra = col_tlc1.slider("Tamaño sub-muestra (n)", 2, 50, 5, key="tlc_n")
+                num_muestras = col_tlc2.slider("Iteraciones", 50, 1000, 200, key="tlc_num")
+
+                medias = []
+                for _ in range(num_muestras):
+                    muestra = np.random.choice(datos_tlc, n_muestra, replace=True)
+                    medias.append(np.mean(muestra))
+
+                # Gráficos con estilo oscuro
+                plt.style.use('dark_background')
+                
+                fig, ax = plt.subplots()
+                ax.hist(medias, bins=30, color='white', edgecolor='black')
+                ax.set_title("Distribución de Medias Muestrales", color='white')
+                ax.grid(color='#333', linestyle='--')
+                st.pyplot(fig)
+                plt.close(fig)
+
+                st.write("Histograma Original:")
+                fig3, ax3 = plt.subplots()
+                ax3.hist(datos_tlc, bins=20, color='#444', edgecolor='white')
+                ax3.set_title("Distribución Original", color='white')
+                ax3.grid(color='#333', linestyle='--')
+                st.pyplot(fig3)
+                plt.close(fig3)
+            else:
+                st.warning("Datos insuficientes para simulación.")
+        except ValueError:
+            st.error("Formato de datos inválido.")
+
+# =============================
+# PESTAÑA 2
+# =============================
 with tab2:
-    st.header("Resultados Estadísticos")
- 
-    if "datos" in st.session_state:
-     
-        data = st.session_state["datos"]
- 
-        media = np.mean(data)
-        mediana = np.median(data)
-        desviacion = np.std(data, ddof=1)
-        varianza = np.var(data, ddof=1)
-        minimo = np.min(data)
-        maximo = np.max(data)
-        rango = maximo - minimo
- 
-        st.write(f"**Media:** {media:.4f}")
-        st.write(f"**Mediana:** {mediana:.4f}")
-        st.write(f"**Desviación estándar (muestral):** {desviacion:.4f}")
-        st.write(f"**Varianza (muestral):** {varianza:.4f}")
-        st.write(f"**Mínimo:** {minimo:.4f}")
-        st.write(f"**Máximo:** {maximo:.4f}")
-        st.write(f"**Rango:** {rango:.4f}")
- 
-    else:
-        st.warning("Primero ingresa los datos en la pestaña 'Calculadora'.")
- 
-# --------------------
-# PESTAÑA 3: ACERCA DE
-# --------------------
+    st.header(">> Inferencia: Media Poblacional")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        media_muestral = st.number_input("Media (x̄)", key="infer_media_muestral")
+        desviacion = st.number_input("Desviación (σ/s)", min_value=0.0, key="infer_desviacion")
+        n = st.number_input("Muestra (n)", min_value=1, key="infer_n")
+    with col2:
+        nivel_confianza = st.selectbox("Confianza", [0.90, 0.95, 0.99])
+
+    if st.button("CALCULAR INTERVALO [IC]"):
+        z = {0.90: 1.645, 0.95: 1.96, 0.99: 2.576}[nivel_confianza]
+        error = z * (desviacion / np.sqrt(n))
+        st.info(f"IC: ({media_muestral - error:.4f}, {media_muestral + error:.4f})")
+
+# =============================
+# PESTAÑA 3
+# =============================
 with tab3:
-    st.header("Acerca de la App")
-    st.write("""
-    Esta app fue creada para practicar el análisis estadístico básico.
- 
-    **Funciones:**
-    - Ingreso de datos numéricos
-    - Cálculo de media, mediana, desviación estándar y varianza
-    - Cálculo de mínimo, máximo y rango
-    - Organización en pestañas (entrada de datos, resultados e información)
-    """)
+    st.header(">> Inferencia: Proporción")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        p = st.number_input("Proporción (p̂)", 0.0, 1.0, key="prop_p")
+        n_prop = st.number_input("Muestra (n)", min_value=1, key="prop_n")
+    with col2:
+        confianza_p = st.selectbox("Confianza", [0.90, 0.95, 0.99], key="prop")
+
+    if st.button("CALCULAR INTERVALO [PROP]"):
+        z = {0.90: 1.645, 0.95: 1.96, 0.99: 2.576}[confianza_p]
+        error = z * np.sqrt((p * (1 - p)) / n_prop)
+        st.success(f"IC: ({p - error:.4f}, {p + error:.4f})")
+
+# =============================
+# PESTAÑA 4
+# =============================
+with tab4:
+    st.header(">> Dos Poblaciones")
+    
+    st.markdown("### Diferencia de Medias")
+    c1, c2 = st.columns(2)
+    with c1:
+        x1 = st.number_input("Media 1", key="dosp_x1")
+        s1 = st.number_input("Desviación 1", min_value=0.0, key="dosp_s1")
+        n1 = st.number_input("n₁", min_value=1, key="dosp_n1")
+    with c2:
+        x2 = st.number_input("Media 2", key="dosp_x2")
+        s2 = st.number_input("Desviación 2", min_value=0.0, key="dosp_s2")
+        n2 = st.number_input("n₂", min_value=1, key="dosp_n2")
+
+    if st.button("CALCULAR DIFERENCIA [MEDIAS]"):
+        diff = x1 - x2
+        st.info(f"Dif: {diff:.4f}")
+        # Cálculo del error estándar de la diferencia
+        if n1 > 0 and n2 > 0:
+            se_diff = np.sqrt((s1**2 / n1) + (s2**2 / n2))
+            if se_diff == 0:
+                st.warning("Error estándar = 0. Revisa desviaciones y tamaños de muestra.")
+            else:
+                st.success(f"Error estándar = {se_diff:.4f}")
+        else:
+            st.warning("Revisa los tamaños de muestra para calcular error estándar.")
+
+    st.markdown("---")
+    st.markdown("### Diferencia de Proporciones")
+    colp1, colp2 = st.columns(2)
+    with colp1:
+        p1 = st.number_input("Prop 1 (p̂₁)", 0.0, 1.0, key="p1")
+        n1p = st.number_input("n₁ (prop)", min_value=1, key="n1p")
+    with colp2:
+        p2 = st.number_input("Prop 2 (p̂₂)", 0.0, 1.0, key="p2")
+        n2p = st.number_input("n₂ (prop)", min_value=1, key="n2p")
+
+    if st.button("CALCULAR DIFERENCIA [PROP]"):
+        st.info(f"Dif: {p1 - p2:.4f}")
+
+    st.markdown("---")
+    st.markdown("### Hipótesis: Medias")
+    mu0 = st.number_input("H₀ (μ₁ − μ₂)", key="mu0_medias")
+    alpha = st.selectbox("Alpha (α)", [0.01, 0.05, 0.10], key="alpha_medias")
+
+    if st.button("TEST HIPÓTESIS [MEDIAS]"):
+        if n1 > 0 and n2 > 0:
+            se = np.sqrt((s1**2 / n1) + (s2**2 / n2))
+            if se == 0:
+                st.error("Error estándar es 0.")
+            else:
+                z = ((x1 - x2) - mu0) / se
+                z_crit = stats.norm.ppf(1 - alpha/2)
+                st.write(f"Z calc: {z:.4f} | Z crit: ±{z_crit:.4f}")
+                if abs(z) > z_crit: st.error("RECHAZAR H₀")
+                else: st.success("NO RECHAZAR H₀")
+        else:
+            st.warning("Revisa los tamaños de muestra.")
+
+    st.markdown("---")
+    st.markdown("### Hipótesis: Proporciones")
+    p0 = st.number_input("H₀ (p₁ − p₂)", key="p0_prop")
+    alpha_p = st.selectbox("Alpha (α)", [0.01, 0.05, 0.10], key="alpha_prop")
+
+    if st.button("TEST HIPÓTESIS [PROP]"):
+        if n1p > 0 and n2p > 0:
+            p_pool = (p1*n1p + p2*n2p) / (n1p + n2p)
+            se_p = np.sqrt(p_pool*(1-p_pool)*(1/n1p + 1/n2p))
+            if se_p == 0:
+                st.error("Error estándar es 0.")
+            else:
+                z_p = ((p1 - p2) - p0) / se_p
+                z_crit_p = stats.norm.ppf(1 - alpha_p/2)
+                st.write(f"Z calc: {z_p:.4f} | Z crit: ±{z_crit_p:.4f}")
+                if abs(z_p) > z_crit_p: st.error("RECHAZAR H₀")
+                else: st.success("NO RECHAZAR H₀")
+
+# =============================
+# PESTAÑA 5
+# =============================
+with tab5:
+    st.header(">> Estadísticos Z / t")
+
+    tipo = st.radio("Selector", ["Z (Normal)", "t (Student)"], horizontal=True)
+
+    col1, col2 = st.columns(2)
+    with col1:
+        x_barra = st.number_input("Media Muestral", key="xbar_z")
+        mu = st.number_input("Media Pob.", key="z_mu")
+        s = st.number_input("Desviación", min_value=0.0, key="z_s")
+    with col2:
+        n = st.number_input("n", min_value=1, key="z_n")
+        alpha = st.selectbox("Alpha", [0.01, 0.05, 0.10], index=1, key="alpha_z_t")
+
+    if st.button("CALCULAR ESTADÍSTICO"):
+        if tipo.startswith("Z"):
+            if s > 0:
+                z_stat = (x_barra - mu) / (s / np.sqrt(n))
+                p_val = 2 * (1 - stats.norm.cdf(abs(z_stat)))
+                z_crit = stats.norm.ppf(1 - alpha/2)
+                st.write(f"Z: {z_stat:.4f} | P-val: {p_val:.4f}")
+                if abs(z_stat) > z_crit: st.error("RECHAZAR H₀")
+                else: st.success("NO RECHAZAR H₀")
+            else: st.error("Desviación debe ser > 0")
+        else:
+            if n > 1 and s > 0:
+                t_stat = (x_barra - mu) / (s / np.sqrt(n))
+                df = int(n) - 1
+                p_val = 2 * (1 - stats.t.cdf(abs(t_stat), df))
+                t_crit = stats.t.ppf(1 - alpha/2, df)
+                st.write(f"t: {t_stat:.4f} | P-val: {p_val:.4f}")
+                if abs(t_stat) > t_crit: st.error("RECHAZAR H₀")
+                else: st.success("NO RECHAZAR H₀")
+            else: st.error("Verifica n > 1 y s > 0")
+
+# =============================
+# PESTAÑA 6
+# =============================
+with tab6:
+    st.header(">> Tamaño de Muestra")
+
+    c1, c2 = st.columns(2)
+    with c1:
+        st.subheader("Para la Media")
+        s = st.number_input("Desviación Est.", min_value=0.0, key="s_media")
+        E = st.number_input("Error Máx.", min_value=0.0001, key="e_media")
+        conf = st.selectbox("Confianza", [0.90,0.95,0.99], key="conf_tm_media")
+        if st.button("CALCULAR N [MEDIA]", key="btn_tm_media"):
+            z = {0.90:1.645,0.95:1.96,0.99:2.576}[conf]
+            n_res = (z*s/E)**2
+            st.metric("n Requerida", f"{np.ceil(n_res):.0f}")
+
+    with c2:
+        st.subheader("Para la Proporción")
+        p = st.number_input("Proporción Est.", 0.0, 1.0, 0.5, key="p_tm")
+        E_p = st.number_input("Error Máx.", min_value=0.0001, key="e_prop")
+        conf_p = st.selectbox("Confianza", [0.90,0.95,0.99], key="conf_tm_prop")
+        if st.button("CALCULAR N [PROP]", key="btn_tm_prop"):
+            z = {0.90:1.645,0.95:1.96,0.99:2.576}[conf_p]
+            n_res = (z**2 * p*(1-p)) / (E_p**2)
+            st.metric("n Requerida", f"{np.ceil(n_res):.0f}")
