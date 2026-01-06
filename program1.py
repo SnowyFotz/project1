@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 st.set_page_config(page_title="Calculadora Estadística", layout="wide")
 
 # =============================
-# 💠 ESTILOS FUTURISTAS B&W NYA 💠
+# 💠 ESTILOS FUTURISTAS B&W
 # Inyección de CSS para el tema Dark Future
 # =============================
 st.markdown("""
